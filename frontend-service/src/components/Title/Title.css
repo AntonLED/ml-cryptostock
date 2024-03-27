@@ -1,0 +1,7 @@
+.Title { 
+    color: rgb(255, 255, 255);
+    text-align: center;
+    border-radius: 10px;
+    /* background-image: #000000;impo */
+    background-image: radial-gradient(circle, rgb(77, 101, 171) 0%, rgb(24, 65, 161) 100%);
+}

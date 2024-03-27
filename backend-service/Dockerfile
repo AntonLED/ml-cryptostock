@@ -1,15 +1,11 @@
 FROM python:alpine
 
-WORKDIR /app
+WORKDIR /code
 
-COPY requirements.txt /app/
+COPY ./requirements.txt /code/requirements.txt
 
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
-COPY . .
+COPY ./app /code/app
 
-EXPOSE 5000
-
-ENV FLASK_APP=app.py
-
-CMD [ "flask", "run", "--host", "0.0.0.0" ]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "5000"]

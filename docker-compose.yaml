@@ -7,8 +7,8 @@ services:
     ports:
       - 5000:5000
 
-  frontend:
-    build: ./frontend-service
-    container_name: frontend-service
-    ports:
-      - 3000:3000
+  # frontend:
+  #   build: ./frontend-service
+  #   container_name: frontend-service
+  #   ports:
+  #     - 3000:3000

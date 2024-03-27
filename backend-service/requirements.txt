@@ -1,2 +1,3 @@
-flask
+fastapi
 black
+uvicorn[standard]

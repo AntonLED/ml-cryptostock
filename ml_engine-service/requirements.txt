@@ -1,3 +1,7 @@
-tensorflow
+torch
 numpy
 matplotlib
+pandas
+scikit-learn
+tqdm
+seaborn

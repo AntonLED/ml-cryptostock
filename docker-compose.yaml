@@ -7,6 +7,41 @@ services:
     ports:
       - 5000:5000
 
+  postgres: 
+    image: postgres:13.3
+    container_name: postgres-service
+    environment:
+      POSTGRES_DB: test
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - postgres-network
+
+  pgadmin: 
+    image: dpage/pgadmin4:7.2
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "al3406099@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "test_password"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports: 
+      - 5050:80
+    networks:
+      - postgres-network
+
+volumes:
+  postgres-data: 
+  pgadmin-data:
+
+networks:
+  postgres-network:
+    driver: bridge
+
   # frontend:
   #   build: ./frontend-service
   #   container_name: frontend-service

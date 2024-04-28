@@ -14,12 +14,4 @@ async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
         # data = await websocket.receive_text()
-        await websocket.send_text(f"{random()}")
-
-@app.websocket("/ws1")
-async def websocket_endpoint1(websocket: WebSocket):
-    await websocket.accept()
-    while True:
-        # data = await websocket.receive_text()
-        await websocket.send_text(f"{random() + 100}")
-
+        await websocket.send_text(f"{round(random(), 2)}")

@@ -26,18 +26,11 @@ async def websocket_endpoint(websocket: WebSocket):
 
 def get_klines_iter():
     # TODO: fix this bullshit function
+    url = "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=100"
+    df = pd.DataFrame(pd.read_json(url)[1])
+    df.columns = ["open"]
 
-    url = (
-        "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=100"
-    )
-
-    df =  pd.read_json(url)
-
-    print(df)
-
-    return pd.DataFrame(df[1])
-    
-
+    return df
 
 
 @app.get("/predict/")
@@ -49,14 +42,12 @@ async def get_predict():
     )
     model.eval()
 
-    # r = await get_klines_iter()
-
     df = get_klines_iter()
-    # df = pd.DataFrame(pd.read_csv("app/data/BTCUSDT_2020.csv").open.tail(100))
+    real_value = df["open"].values[-1]
     df.reset_index(drop=True, inplace=True)
     data = scaler.transform(df)
 
-    for i in range(100):
+    for _ in range(100):
         tensor = services.create_dataset(data)
         pred = services.predict(model, tensor)
         data = np.append(data, np.array(pred))
@@ -64,4 +55,6 @@ async def get_predict():
 
     preds = pd.DataFrame(data)
     unscaled = scaler.inverse_transform(preds)
-    return np.mean(unscaled.flatten().tolist())
+    predicted_value = np.mean(unscaled.flatten().tolist())
+
+    return {"real_value": real_value, "predicted_value": predicted_value}

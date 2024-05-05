@@ -24,13 +24,18 @@ async def websocket_endpoint(websocket: WebSocket):
         await websocket.send_text(f"{round(random(), 2)}")"""
 
 
-async def get_klines_iter():
-    # TODO: insert it into get_predict
+def get_klines_iter():
+    # TODO: fix this bullshit function
+
     url = (
-        "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=100"
+        "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=100"
     )
- 
-    response = requests.get(url).json()
+
+    df =  pd.read_json(url)
+
+    print(df)
+
+    return pd.DataFrame(df[1])
     
 
 
@@ -44,9 +49,10 @@ async def get_predict():
     )
     model.eval()
 
-    r = await get_klines_iter()
+    # r = await get_klines_iter()
 
-    df = pd.DataFrame(pd.read_csv("app/data/BTCUSDT_2020.csv").open.tail(100))
+    df = get_klines_iter()
+    # df = pd.DataFrame(pd.read_csv("app/data/BTCUSDT_2020.csv").open.tail(100))
     df.reset_index(drop=True, inplace=True)
     data = scaler.transform(df)
 

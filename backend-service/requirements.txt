@@ -6,3 +6,4 @@ pandas
 torch
 joblib
 scikit-learn
+requests

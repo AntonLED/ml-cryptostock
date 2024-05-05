@@ -24,15 +24,6 @@ function App() {
                 <Title/>    
                 <Prediction/>
             </div>
-   
-            {/* <header className="App-header"> */}
-                {/* <h1>React and flask</h1>
-                <p>{data.name}</p>
-                <p>{data.age}</p>
-                <p>{data.date}</p>
-                <p>{data.programming}</p> */}
-
-            {/* </header> */}
         </div>
     );
 }

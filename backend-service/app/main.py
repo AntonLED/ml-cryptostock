@@ -55,6 +55,6 @@ async def get_predict():
 
     preds = pd.DataFrame(data)
     unscaled = scaler.inverse_transform(preds)
-    predicted_value = np.mean(unscaled.flatten().tolist())
+    predicted_value = unscaled.flatten().tolist()[0]
 
     return {"real_value": real_value, "predicted_value": predicted_value}

@@ -3,7 +3,9 @@ black
 uvicorn[standard]
 numpy
 pandas
-torch
 joblib
 scikit-learn
-requests
+tritonclient[all]
+sqlalchemy
+psycopg2-binary
+binance

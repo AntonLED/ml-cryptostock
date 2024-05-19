@@ -8,5 +8,4 @@ scikit-learn
 tritonclient[all]
 sqlalchemy
 psycopg2-binary
-python-binance
-requests
+binance

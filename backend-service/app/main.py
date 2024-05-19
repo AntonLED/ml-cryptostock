@@ -1,5 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket
+from fastapi.middleware.cors import CORSMiddleware
 import app.services as services
+import numpy as np
+
 
 app = FastAPI()
 
@@ -13,4 +16,7 @@ async def startup_event():
 
 @app.get("/predict/")
 async def get_predict():
-    return services.GetHistoricalData()
+    pred = services.GetPrediction()
+    return {"preds" : np.reshape(pred, (100)).tolist()}
+
+

@@ -13,6 +13,4 @@ async def startup_event():
 
 @app.get("/predict/")
 async def get_predict():
-    return services.GetPrediction()
-
-
+    return services.GetHistoricalData()

@@ -34,6 +34,12 @@ services:
     networks:
       - postgres-network
 
+  frontend:
+    build: ./frontend-service
+    container_name: frontend-service
+    ports:
+      - 3000:3000
+
 volumes:
   postgres-data: 
   pgadmin-data:
@@ -41,9 +47,3 @@ volumes:
 networks:
   postgres-network:
     driver: bridge
-
-  # frontend:
-  #   build: ./frontend-service
-  #   container_name: frontend-service
-  #   ports:
-  #     - 3000:3000

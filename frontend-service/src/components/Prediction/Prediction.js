@@ -40,7 +40,7 @@ function Prediction() {
                         }]	
                     ); 
                 })
-        }, 60 * 1000);
+        }, 10 * 1000);
         
         return () => clearInterval(interval); 
     }, []); 

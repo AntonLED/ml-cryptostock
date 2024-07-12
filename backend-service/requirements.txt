@@ -7,3 +7,4 @@ torch
 joblib
 scikit-learn
 requests
+sqlalchemy

@@ -24,12 +24,12 @@ def get_db():
 
 
 @app.post("/rv/", response_model=schemas.RealValue)
-def app_rv(rv: schemas.RealValue, db: Session = Depends(get_db)):
+def app_rv(rv: schemas.RealValueCreate, db: Session = Depends(get_db)):
     return crud.add_real_value(db, real_value=rv)
 
 
 @app.post("/pv/", response_model=schemas.PredictedValue)
-def add_pv(pv: schemas.PredictedValue, db: Session = Depends(get_db)):
+def add_pv(pv: schemas.PredictedValueCreate, db: Session = Depends(get_db)):
     return crud.add_predicted_value(db, predicted_value=pv)
 
 

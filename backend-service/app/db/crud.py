@@ -21,7 +21,7 @@ def get_predicted_values(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.PredictedValue).offset(skip).limit(limit).all()
 
 
-def add_real_value(db: Session, real_value: schemas.RealValue):
+def add_real_value(db: Session, real_value: schemas.RealValueCreate):
     db_rv = models.RealValue(value=real_value.value, currency=real_value.currency)
     db.add(db_rv)
     db.commit()
@@ -29,7 +29,7 @@ def add_real_value(db: Session, real_value: schemas.RealValue):
     return db_rv
 
 
-def add_predicted_value(db: Session, predicted_value: schemas.PredictedValue):
+def add_predicted_value(db: Session, predicted_value: schemas.PredictedValueCreate):
     db_pv = models.PredictedValue(
         value=predicted_value.value, currency=predicted_value.currency
     )

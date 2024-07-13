@@ -3,19 +3,25 @@ from typing import Union
 from pydantic import BaseModel
 
 
-class RealValue(BaseModel):
-    id: int
+class RealValueCreate(BaseModel):
     value: float
     currency: str
 
-    class Config:
-        orm_mode = True
 
-
-class PredictedValue(BaseModel):
+class RealValue(RealValueCreate):
     id: int
+
+    class Config:
+        from_attributes = True
+
+
+class PredictedValueCreate(BaseModel):
     value: float
     currency: str
 
+
+class PredictedValue(PredictedValueCreate):
+    id: int
+
     class Config:
-        orm_mode = True
+        from_attributes = True

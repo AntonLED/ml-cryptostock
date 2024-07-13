@@ -4,12 +4,13 @@ services:
   backend:
     build: ./backend-service
     container_name: backend-service
+    depends_on:
+      - postgres
     ports:
       - 5000:5000
 
   postgres: 
     image: postgres:13.3
-    container_name: postgres-service
     environment:
       POSTGRES_DB: test
       POSTGRES_USER: test_user
@@ -18,8 +19,6 @@ services:
       - postgres-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
-    networks:
-      - postgres-network
 
   pgadmin: 
     image: dpage/pgadmin4:7.2
@@ -31,9 +30,7 @@ services:
       - pgadmin-data:/var/lib/pgadmin
     ports: 
       - 5050:80
-    networks:
-      - postgres-network
-
+    
   frontend:
     build: ./frontend-service
     container_name: frontend-service
@@ -43,7 +40,3 @@ services:
 volumes:
   postgres-data: 
   pgadmin-data:
-
-networks:
-  postgres-network:
-    driver: bridge

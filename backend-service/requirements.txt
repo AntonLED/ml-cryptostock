@@ -8,3 +8,4 @@ joblib
 scikit-learn
 requests
 sqlalchemy
+psycopg2-binary

@@ -3,34 +3,37 @@ from sqlalchemy.orm import Session
 from app.db import models, schemas
 
 
-def get_user(db: Session, user_id: int):
-    return db.query(models.User).filter(models.User.id == user_id).first()
+def get_real_value(db: Session, id: int):
+    return db.query(models.RealValue).filter(models.RealValue.id == id).first()
 
 
-def get_user_by_email(db: Session, email: str):
-    return db.query(models.User).filter(models.User.email == email).first()
+def get_real_values(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.RealValue).offset(skip).limit(limit).all()
 
 
-def get_users(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.User).offset(skip).limit(limit).all()
+def get_predicted_value(db: Session, id: int):
+    return (
+        db.query(models.PredictedValue).filter(models.PredictedValue.id == id).first()
+    )
 
 
-def create_user(db: Session, user: schemas.UserCreate):
-    fake_hashed_password = user.password + "notreallyhashed"
-    db_user = models.User(email=user.email, hashed_password=fake_hashed_password)
-    db.add(db_user)
+def get_predicted_values(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.PredictedValue).offset(skip).limit(limit).all()
+
+
+def add_real_value(db: Session, real_value: schemas.RealValue):
+    db_rv = models.RealValue(value=real_value.value, currency=real_value.currency)
+    db.add(db_rv)
     db.commit()
-    db.refresh(db_user)
-    return db_user
+    db.refresh(db_rv)
+    return db_rv
 
 
-def get_items(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Item).offset(skip).limit(limit).all()
-
-
-def create_user_item(db: Session, item: schemas.ItemCreate, user_id: int):
-    db_item = models.Item(**item.dict(), owner_id=user_id)
-    db.add(db_item)
+def add_predicted_value(db: Session, predicted_value: schemas.PredictedValue):
+    db_pv = models.PredictedValue(
+        value=predicted_value.value, currency=predicted_value.currency
+    )
+    db.add(db_pv)
     db.commit()
-    db.refresh(db_item)
-    return db_item
+    db.refresh(db_pv)
+    return db_pv

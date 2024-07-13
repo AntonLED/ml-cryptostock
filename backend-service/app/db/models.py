@@ -1,26 +1,19 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, Float
 
 from app.db.database import Base
 
 
-class User(Base):
-    __tablename__ = "users"
+class RealValue(Base):
+    __tablename__ = "real-values"
 
     id = Column(Integer, primary_key=True)
-    email = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
-    is_active = Column(Boolean, default=True)
-
-    items = relationship("Item", back_populates="owner")
+    value = Column(Float, index=True)
+    currency = Column(String, index=True)
 
 
-class Item(Base):
-    __tablename__ = "items"
+class PredictedValue(Base):
+    __tablename__ = "predicted-values"
 
     id = Column(Integer, primary_key=True)
-    title = Column(String, index=True)
-    description = Column(String, index=True)
-    owner_id = Column(Integer, ForeignKey("users.id"))
-
-    owner = relationship("User", back_populates="items")
+    value = Column(Float, index=True)
+    currency = Column(String, index=True)

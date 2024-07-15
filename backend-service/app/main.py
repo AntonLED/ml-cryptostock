@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 import app.services as services
 import torch
@@ -12,7 +12,16 @@ from app.db.database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
 
+
 app = FastAPI()
+
+
+def get_klines_iter(symbol: str, interval: str, limit: int):
+    url = f"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit={limit}"
+    df = pd.DataFrame(pd.read_json(url)[1])
+    # df.columns = ["open"]
+
+    return df["open"]
 
 
 def get_db():
@@ -23,35 +32,50 @@ def get_db():
         db.close()
 
 
-@app.post("/rv/", response_model=schemas.RealValue)
+@app.get("/clear_rvs/")
+def clear_rvs(db: Session = Depends(get_db)):
+    return crud.clear_real_values(db)
+
+
+@app.get("/clear_pvs/")
+def clear_pvs(db: Session = Depends(get_db)):
+    return crud.clear_predicted_values(db)
+
+
+@app.post("/set_rv/", response_model=schemas.RealValue)
 def app_rv(rv: schemas.RealValueCreate, db: Session = Depends(get_db)):
     return crud.add_real_value(db, real_value=rv)
 
 
-@app.post("/pv/", response_model=schemas.PredictedValue)
+@app.post("/set_pv/", response_model=schemas.PredictedValue)
 def add_pv(pv: schemas.PredictedValueCreate, db: Session = Depends(get_db)):
     return crud.add_predicted_value(db, predicted_value=pv)
 
 
-@app.get("/rvs/", response_model=List[schemas.RealValue])
+@app.get("/get_rvs/", response_model=List[schemas.RealValue])
 def read_rvs(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     rvs = crud.get_real_values(db, skip=skip, limit=limit)
     return rvs
 
 
-@app.get("/pvs/", response_model=List[schemas.PredictedValue])
+@app.get("/get_pvs/", response_model=List[schemas.PredictedValue])
 def read_pvs(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     pvs = crud.get_predicted_values(db, skip=skip, limit=limit)
     return pvs
 
 
-# def get_klines_iter():
-#     # TODO: fix this bullshit function
-#     url = "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=100"
-#     df = pd.DataFrame(pd.read_json(url)[1])
-#     df.columns = ["open"]
-
-#     return df
+@app.post("/upd_rvs/")
+def update_rvs(
+    symbol: str = "BTCUSDT",
+    interval: str = "1m",
+    limit: int = 100,
+    db: Session = Depends(get_db),
+):
+    rvs = get_klines_iter(symbol, interval, limit)
+    for rv in rvs:
+        crud.add_real_value(
+            db, real_value=schemas.RealValueCreate(value=rv, currency=symbol)
+        )
 
 
 # @app.get("/predict/")

@@ -37,3 +37,15 @@ def add_predicted_value(db: Session, predicted_value: schemas.PredictedValueCrea
     db.commit()
     db.refresh(db_pv)
     return db_pv
+
+
+def clear_predicted_values(db: Session):
+    db.query(models.PredictedValue).delete()
+    db.commit()
+    return True
+
+
+def clear_real_values(db: Session):
+    db.query(models.RealValue).delete()
+    db.commit()
+    return True

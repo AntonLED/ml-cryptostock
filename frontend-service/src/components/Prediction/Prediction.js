@@ -1,6 +1,5 @@
 import "./Prediction.css"
 import { useState, useEffect } from "react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Bar, BarChart, ScatterChart, Scatter } from 'recharts';
 
 
 function Prediction() { 
@@ -66,15 +65,6 @@ function Prediction() {
             <h1>
                 Predicted value: {predValue.value + " " + predValue.currency}.
             </h1>
-            <div>	
-            <LineChart width={1000} height={300} data={chart} >	
-                <YAxis />	
-                <XAxis />	
-                <Tooltip />
-                <Line  dataKey="pred" />
-                <Line  dataKey="real" />
-            </LineChart>	
-            </div>
         </div>
     );
 }

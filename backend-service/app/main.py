@@ -6,6 +6,8 @@ import torch
 import pandas as pd
 import numpy as np
 import joblib
+import datetime
+import random
 
 from app.db import crud, models, schemas
 from app.db.database import SessionLocal, engine
@@ -64,18 +66,23 @@ def read_pvs(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return pvs
 
 
-@app.post("/upd_rvs/")
-def update_rvs(
-    symbol: str = "BTCUSDT",
-    interval: str = "1m",
-    limit: int = 100,
-    db: Session = Depends(get_db),
-):
-    rvs = get_klines_iter(symbol, interval, limit)
-    for rv in rvs:
-        crud.add_real_value(
-            db, real_value=schemas.RealValueCreate(value=rv, currency=symbol)
-        )
+@app.get("/predict/")
+async def get_predict():
+    return {"time": datetime.datetime.now(), "value": round(random.random(), 2)}
+
+
+# @app.post("/upd_rvs/")
+# def update_rvs(
+#     symbol: str = "BTCUSDT",
+#     interval: str = "1m",
+#     limit: int = 100,
+#     db: Session = Depends(get_db),
+# ):
+#     rvs = get_klines_iter(symbol, interval, limit)
+#     for rv in rvs:
+#         crud.add_real_value(
+#             db, real_value=schemas.RealValueCreate(value=rv, currency=symbol)
+#         )
 
 
 # @app.get("/predict/")

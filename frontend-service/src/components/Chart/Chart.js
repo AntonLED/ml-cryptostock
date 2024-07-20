@@ -3,12 +3,13 @@ import { useState, useEffect, useRef } from "react";
 import { createChart } from 'lightweight-charts';
 
 
+const URL = "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=1000"; 
+const WS_URL = "wss://stream.binance.com:9443/ws/btcusdt@kline_1m";
+
 
 function Chart() {
     const chartContainerRef = useRef();
-    const chart = useRef();
-
-    const props = {
+    const chartProps = {
         width: 800, 
         height: 300,
         timeScale: {
@@ -16,30 +17,24 @@ function Chart() {
             secondsVisible: false
         }
     };
-
-    const url = "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=100"; 
-    const ws_url = "wss://stream.binance.com:9443/ws/btcusdt@kline_1m";
-    const ws = new WebSocket(ws_url); 
+    const ws = new WebSocket(WS_URL); 
 
     useEffect(() => {
-        chart.current = createChart(chartContainerRef.current, props);
+        const chart = createChart(chartContainerRef.current, chartProps);
         
-        const candleChart = chart.current.addCandlestickSeries();
+        const achart = chart.addAreaSeries();
 
-        fetch(url)
+        fetch(URL)
             .then(res => res.json())
             .then(data => {
                 const cdata = data.map(d => {
                     return {
                         time: d[0] / 1000, 
-                        open: parseFloat(d[1]), 
-                        high: parseFloat(d[2]), 
-                        low: parseFloat(d[3]), 
-                        close: parseFloat(d[4])
+                        value: parseFloat(d[1]) 
                     }
                 });
 
-                candleChart.setData(cdata); 
+                achart.setData(cdata); 
             })
             .catch(err => console.log(err));
 
@@ -48,22 +43,16 @@ function Chart() {
 
             console.log("WS"); 
 
-            candleChart.update({
+            achart.update({
                 time: response.k.t / 1000, 
-                open: parseFloat(response.k.o), 
-                high: parseFloat(response.k.h), 
-                low: parseFloat(response.k.l), 
-                close: parseFloat(response.k.c)
+                value: parseFloat(response.k.o)
             });
         };
 
         return () => {
-            chart.current.remove();
+            chart.remove();
         }
-        
     }, []);
-
-  
 
     return (
         <div className="Chart" ref={chartContainerRef}/>

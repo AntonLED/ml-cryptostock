@@ -1,1 +1,1 @@
-Initial information hjuihuihuiq
+Initial information
